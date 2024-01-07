@@ -2,9 +2,11 @@
  * The AbstractSet class defines a single abstract method, has().
  */
 class AbstractSet {
-    // Throw an error here so that subclasses are forced
-    // to define their own working version of this method.
-    has(x) { throw new Error("Abstract method"); }
+  // Throw an error here so that subclasses are forced
+  // to define their own working version of this method.
+  has(x) {
+    throw new Error("Abstract method");
+  }
 }
 
 /**
@@ -16,15 +18,19 @@ class AbstractSet {
  * string using mathematical notation.
  */
 class NotSet extends AbstractSet {
-    constructor(set) {
-        super();
-        this.set = set;
-    }
+  constructor(set) {
+    super();
+    this.set = set;
+  }
 
-    // Our implementation of the abstract method we inherited
-    has(x) { return !this.set.has(x); }
-    // And we also override this Object method
-    toString() { return `{ x| x ∉ ${this.set.toString()} }`; }
+  // Our implementation of the abstract method we inherited
+  has(x) {
+    return !this.set.has(x);
+  }
+  // And we also override this Object method
+  toString() {
+    return `{ x| x ∉ ${this.set.toString()} }`;
+  }
 }
 
 /**
@@ -34,14 +40,18 @@ class NotSet extends AbstractSet {
  * enumerable and does not have a meaningful size.
  */
 class RangeSet extends AbstractSet {
-    constructor(from, to) {
-        super();
-        this.from = from;
-        this.to = to;
-    }
+  constructor(from, to) {
+    super();
+    this.from = from;
+    this.to = to;
+  }
 
-    has(x) { return x >= this.from && x <= this.to; }
-    toString() { return `{ x| ${this.from} ≤ x ≤ ${this.to} }`; }
+  has(x) {
+    return x >= this.from && x <= this.to;
+  }
+  toString() {
+    return `{ x| ${this.from} ≤ x ≤ ${this.to} }`;
+  }
 }
 
 /*
@@ -53,27 +63,35 @@ class RangeSet extends AbstractSet {
  * methods for free.
  */
 class AbstractEnumerableSet extends AbstractSet {
-    get size() { throw new Error("Abstract method"); }
-    [Symbol.iterator]() { throw new Error("Abstract method"); }
+  get size() {
+    throw new Error("Abstract method");
+  }
+  [Symbol.iterator]() {
+    throw new Error("Abstract method");
+  }
 
-    isEmpty() { return this.size === 0; }
-    toString() { return `{${Array.from(this).join(", ")}}`; }
-    equals(set) {
-        // If the other set is not also Enumerable, it isn't equal to this one
-        if (!(set instanceof AbstractEnumerableSet)) return false;
+  isEmpty() {
+    return this.size === 0;
+  }
+  toString() {
+    return `{${Array.from(this).join(", ")}}`;
+  }
+  equals(set) {
+    // If the other set is not also Enumerable, it isn't equal to this one
+    if (!(set instanceof AbstractEnumerableSet)) return false;
 
-        // If they don't have the same size, they're not equal
-        if (this.size !== set.size) return false;
+    // If they don't have the same size, they're not equal
+    if (this.size !== set.size) return false;
 
-        // Loop through the elements of this set
-        for(let element of this) {
-            // If an element isn't in the other set, they aren't equal
-            if (!set.has(element)) return false;
-        }
-
-        // The elements matched, so the sets are equal
-        return true;
+    // Loop through the elements of this set
+    for (let element of this) {
+      // If an element isn't in the other set, they aren't equal
+      if (!set.has(element)) return false;
     }
+
+    // The elements matched, so the sets are equal
+    return true;
+  }
 }
 
 /*
@@ -81,16 +99,22 @@ class AbstractEnumerableSet extends AbstractSet {
  * A singleton set is a read-only set with a single member.
  */
 class SingletonSet extends AbstractEnumerableSet {
-    constructor(member) {
-        super();
-        this.member = member;
-    }
+  constructor(member) {
+    super();
+    this.member = member;
+  }
 
-    // We implement these three methods, and inherit isEmpty, equals()
-    // and toString() implementations based on these methods.
-    has(x) { return x === this.member; }
-    get size() { return 1; }
-    *[Symbol.iterator]() { yield this.member; }
+  // We implement these three methods, and inherit isEmpty, equals()
+  // and toString() implementations based on these methods.
+  has(x) {
+    return x === this.member;
+  }
+  get size() {
+    return 1;
+  }
+  *[Symbol.iterator]() {
+    yield this.member;
+  }
 }
 
 /*
@@ -100,29 +124,33 @@ class SingletonSet extends AbstractEnumerableSet {
  * add(), subtract(), and intersect() methods on top of those. Note that
  * our API diverges here from the standard JavaScript Set class.
  */
-class AbstractWritableSet extends  AbstractEnumerableSet {
-    insert(x) { throw new Error("Abstract method"); }
-    remove(x) { throw new Error("Abstract method"); }
+class AbstractWritableSet extends AbstractEnumerableSet {
+  insert(x) {
+    throw new Error("Abstract method");
+  }
+  remove(x) {
+    throw new Error("Abstract method");
+  }
 
-    add(set) {
-        for(let element of set) {
-            this.insert(element);
-        }
+  add(set) {
+    for (let element of set) {
+      this.insert(element);
     }
+  }
 
-    subtract(set) {
-        for(let element of set) {
-            this.remove(element);
-        }
+  subtract(set) {
+    for (let element of set) {
+      this.remove(element);
     }
+  }
 
-    intersect(set) {
-        for(let element of this) {
-            if (!set.has(element)) {
-                this.remove(element);
-            }
-        }
+  intersect(set) {
+    for (let element of this) {
+      if (!set.has(element)) {
+        this.remove(element);
+      }
     }
+  }
 }
 
 /**
@@ -131,71 +159,81 @@ class AbstractWritableSet extends  AbstractEnumerableSet {
  * elements are non-negative integers less than some maximum size.
  */
 class BitSet extends AbstractWritableSet {
-    constructor(max) {
-        super();
-        this.max = max;  // The maximum integer we can store.
-        this.n = 0;      // How many integers are in the set
-        this.numBytes = Math.floor(max / 8) + 1;   // How many bytes we need
-        this.data = new Uint8Array(this.numBytes); // The bytes
+  constructor(max) {
+    super();
+    this.max = max; // The maximum integer we can store.
+    this.n = 0; // How many integers are in the set
+    this.numBytes = Math.floor(max / 8) + 1; // How many bytes we need
+    this.data = new Uint8Array(this.numBytes); // The bytes
+  }
+
+  // Internal method to check if a value is a legal member of this set
+  _valid(x) {
+    return Number.isInteger(x) && x >= 0 && x <= this.max;
+  }
+
+  // Tests whether the specified bit of the specified byte of our
+  // data array is set or not. Returns true or false.
+  _has(byte, bit) {
+    return (this.data[byte] & BitSet.bits[bit]) !== 0;
+  }
+
+  // Is the value x in this BitSet?
+  has(x) {
+    if (this._valid(x)) {
+      let byte = Math.floor(x / 8);
+      let bit = x % 8;
+      return this._has(byte, bit);
+    } else {
+      return false;
     }
+  }
 
-    // Internal method to check if a value is a legal member of this set
-    _valid(x) { return Number.isInteger(x) && x >= 0 && x <= this.max; }
-
-    // Tests whether the specified bit of the specified byte of our
-    // data array is set or not. Returns true or false.
-    _has(byte, bit) { return (this.data[byte] & BitSet.bits[bit]) !== 0; }
-
-    // Is the value x in this BitSet?
-    has(x) {
-        if (this._valid(x)) {
-            let byte = Math.floor(x / 8);
-            let bit = x % 8;
-            return this._has(byte, bit);
-        } else {
-            return false;
-        }
+  // Insert the value x into the BitSet
+  insert(x) {
+    if (this._valid(x)) {
+      // If the value is valid
+      let byte = Math.floor(x / 8); // convert to byte and bit
+      let bit = x % 8;
+      if (!this._has(byte, bit)) {
+        // If that bit is not set yet
+        this.data[byte] |= BitSet.bits[bit]; // then set it
+        this.n++; // and increment set size
+      }
+    } else {
+      throw new TypeError("Invalid set element: " + x);
     }
+  }
 
-    // Insert the value x into the BitSet
-    insert(x) {
-        if (this._valid(x)) {               // If the value is valid
-            let byte = Math.floor(x / 8);   // convert to byte and bit
-            let bit = x % 8;
-            if (!this._has(byte, bit)) {    // If that bit is not set yet
-                this.data[byte] |= BitSet.bits[bit]; // then set it
-                this.n++;                            // and increment set size
-            }
-        } else {
-            throw new TypeError("Invalid set element: " + x );
-        }
+  remove(x) {
+    if (this._valid(x)) {
+      // If the value is valid
+      let byte = Math.floor(x / 8); // compute the byte and bit
+      let bit = x % 8;
+      if (this._has(byte, bit)) {
+        // If that bit is already set
+        this.data[byte] &= BitSet.masks[bit]; // then unset it
+        this.n--; // and decrement size
+      }
+    } else {
+      throw new TypeError("Invalid set element: " + x);
     }
+  }
 
-    remove(x) {
-        if (this._valid(x)) {              // If the value is valid
-            let byte = Math.floor(x / 8);  // compute the byte and bit
-            let bit = x % 8;
-            if (this._has(byte, bit)) {    // If that bit is already set
-                this.data[byte] &= BitSet.masks[bit];  // then unset it
-                this.n--;                              // and decrement size
-            }
-        } else {
-            throw new TypeError("Invalid set element: " + x );
-        }
+  // A getter to return the size of the set
+  get size() {
+    return this.n;
+  }
+
+  // Iterate the set by just checking each bit in turn.
+  // (We could be a lot more clever and optimize this substantially)
+  *[Symbol.iterator]() {
+    for (let i = 0; i <= this.max; i++) {
+      if (this.has(i)) {
+        yield i;
+      }
     }
-
-    // A getter to return the size of the set
-    get size() { return this.n; }
-
-    // Iterate the set by just checking each bit in turn.
-    // (We could be a lot more clever and optimize this substantially)
-    *[Symbol.iterator]() {
-        for(let i = 0; i <= this.max; i++) {
-            if (this.has(i)) {
-                yield i;
-            }
-        }
-    }
+  }
 }
 
 // Some pre-computed values used by the has(), insert() and remove() methods

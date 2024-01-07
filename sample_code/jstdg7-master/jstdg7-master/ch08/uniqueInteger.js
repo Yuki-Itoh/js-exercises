@@ -6,7 +6,7 @@ uniqueInteger.counter = 0;
 // This function returns a different integer each time it is called.
 // It uses a property of itself to remember the next value to be returned.
 function uniqueInteger() {
-    return uniqueInteger.counter++;  // Return and increment counter property
+  return uniqueInteger.counter++; // Return and increment counter property
 }
-uniqueInteger()  // => 0
-uniqueInteger()  // => 1
+uniqueInteger(); // => 0
+uniqueInteger(); // => 1

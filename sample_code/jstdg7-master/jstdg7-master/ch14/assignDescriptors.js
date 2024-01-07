@@ -18,23 +18,23 @@
  * a non-enumerable property like Object.assign().
  */
 Object.defineProperty(Object, "assignDescriptors", {
-    // Match the attributes of Object.assign()
-    writable: true,
-    enumerable: false,
-    configurable: true,
-    // The function that is the value of the assignDescriptors property.
-    value: function(target, ...sources) {
-        for(let source of sources) {
-            for(let name of Object.getOwnPropertyNames(source)) {
-                let desc = Object.getOwnPropertyDescriptor(source, name);
-                Object.defineProperty(target, name, desc);
-            }
+  // Match the attributes of Object.assign()
+  writable: true,
+  enumerable: false,
+  configurable: true,
+  // The function that is the value of the assignDescriptors property.
+  value: function (target, ...sources) {
+    for (let source of sources) {
+      for (let name of Object.getOwnPropertyNames(source)) {
+        let desc = Object.getOwnPropertyDescriptor(source, name);
+        Object.defineProperty(target, name, desc);
+      }
 
-            for(let symbol of Object.getOwnPropertySymbols(source)) {
-                let desc = Object.getOwnPropertyDescriptor(source, symbol);
-                Object.defineProperty(target, symbol, desc);
-            }
-        }
-        return target;
+      for (let symbol of Object.getOwnPropertySymbols(source)) {
+        let desc = Object.getOwnPropertyDescriptor(source, symbol);
+        Object.defineProperty(target, symbol, desc);
+      }
     }
+    return target;
+  },
 });

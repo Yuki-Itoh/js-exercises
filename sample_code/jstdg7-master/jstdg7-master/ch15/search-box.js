@@ -33,94 +33,117 @@
  * addEventListener().
  */
 class SearchBox extends HTMLElement {
-    constructor() {
-        super(); // Invoke the superclass constructor; must be first.
+  constructor() {
+    super(); // Invoke the superclass constructor; must be first.
 
-        // Create a shadow DOM tree and attach it to this element, setting
-        // the value of this.shadowRoot.
-        this.attachShadow({mode: "open"});
+    // Create a shadow DOM tree and attach it to this element, setting
+    // the value of this.shadowRoot.
+    this.attachShadow({ mode: "open" });
 
-        // Clone the template that defines the descendants and stylesheet for
-        // this custom component, and append that content to the shadow root.
-        this.shadowRoot.append(SearchBox.template.content.cloneNode(true));
+    // Clone the template that defines the descendants and stylesheet for
+    // this custom component, and append that content to the shadow root.
+    this.shadowRoot.append(SearchBox.template.content.cloneNode(true));
 
-        // Get references to the important elements in the shadow DOM
-        this.input = this.shadowRoot.querySelector("#input");
-        let leftSlot = this.shadowRoot.querySelector('slot[name="left"]');
-        let rightSlot = this.shadowRoot.querySelector('slot[name="right"]');
+    // Get references to the important elements in the shadow DOM
+    this.input = this.shadowRoot.querySelector("#input");
+    let leftSlot = this.shadowRoot.querySelector('slot[name="left"]');
+    let rightSlot = this.shadowRoot.querySelector('slot[name="right"]');
 
-        // When the internal input field gets or loses focus, set or remove
-        // the "focused" attribute which will cause our internal stylesheet
-        // to display or hide a fake focus ring on the entire component. Note
-        // that the "blur" and "focus" events bubble and appear to originate
-        // from the <search-box>.
-        this.input.onfocus = () => { this.setAttribute("focused", ""); };
-        this.input.onblur = () => { this.removeAttribute("focused");};
+    // When the internal input field gets or loses focus, set or remove
+    // the "focused" attribute which will cause our internal stylesheet
+    // to display or hide a fake focus ring on the entire component. Note
+    // that the "blur" and "focus" events bubble and appear to originate
+    // from the <search-box>.
+    this.input.onfocus = () => {
+      this.setAttribute("focused", "");
+    };
+    this.input.onblur = () => {
+      this.removeAttribute("focused");
+    };
 
-        // If the user clicks on the magnifying glass, trigger a "search"
-        // event.  Also trigger it if the input field fires a "change"
-        // event. (The "change" event does not bubble out of the Shadow DOM.)
-        leftSlot.onclick = this.input.onchange = (event) => {
-            event.stopPropagation();    // Prevent click events from bubbling
-            if (this.disabled) return;  // Do nothing when disabled
-            this.dispatchEvent(new CustomEvent("search", {
-                detail: this.input.value
-            }));
-        };
+    // If the user clicks on the magnifying glass, trigger a "search"
+    // event.  Also trigger it if the input field fires a "change"
+    // event. (The "change" event does not bubble out of the Shadow DOM.)
+    leftSlot.onclick = this.input.onchange = (event) => {
+      event.stopPropagation(); // Prevent click events from bubbling
+      if (this.disabled) return; // Do nothing when disabled
+      this.dispatchEvent(
+        new CustomEvent("search", {
+          detail: this.input.value,
+        }),
+      );
+    };
 
-        // If the user clicks on the X, trigger a "clear" event.
-        // If preventDefault() is not called on the event, clear the input.
-        rightSlot.onclick = (event) => {
-            event.stopPropagation();    // Don't let the click bubble up
-            if (this.disabled) return;  // Don't do anything if disabled
-            let e = new CustomEvent("clear", { cancelable: true });
-            this.dispatchEvent(e);
-            if (!e.defaultPrevented) {  // If the event was not "cancelled"
-                this.input.value = "";  // then clear the input field
-            }
-        };
+    // If the user clicks on the X, trigger a "clear" event.
+    // If preventDefault() is not called on the event, clear the input.
+    rightSlot.onclick = (event) => {
+      event.stopPropagation(); // Don't let the click bubble up
+      if (this.disabled) return; // Don't do anything if disabled
+      let e = new CustomEvent("clear", { cancelable: true });
+      this.dispatchEvent(e);
+      if (!e.defaultPrevented) {
+        // If the event was not "cancelled"
+        this.input.value = ""; // then clear the input field
+      }
+    };
+  }
+
+  // When some of our attributes are set or changed, we need to set the
+  // corresponding value on the internal <input> element. This life cycle
+  // method, together with the static observedAttributes property below,
+  // takes care of that.
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === "disabled") {
+      this.input.disabled = newValue !== null;
+    } else if (name === "placeholder") {
+      this.input.placeholder = newValue;
+    } else if (name === "size") {
+      this.input.size = newValue;
+    } else if (name === "value") {
+      this.input.value = newValue;
     }
+  }
 
-    // When some of our attributes are set or changed, we need to set the
-    // corresponding value on the internal <input> element. This life cycle
-    // method, together with the static observedAttributes property below,
-    // takes care of that.
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "disabled") {
-            this.input.disabled = newValue !== null;
-        } else if (name === "placeholder") {
-            this.input.placeholder = newValue;
-        } else if (name === "size") {
-            this.input.size = newValue;
-        } else if (name === "value") {
-            this.input.value = newValue;
-        }
-    }
+  // Finally, we define property getters and setters for properties that
+  // correspond to the HTML attributes we support. The getters simply return
+  // the value (or the presence) of the attribute. And the setters just set
+  // the value (or the presence) of the attribute. When a setter method
+  // changes an attribute, the browser will automatically invoke the
+  // attributeChangedCallback above.
 
-    // Finally, we define property getters and setters for properties that
-    // correspond to the HTML attributes we support. The getters simply return
-    // the value (or the presence) of the attribute. And the setters just set
-    // the value (or the presence) of the attribute. When a setter method
-    // changes an attribute, the browser will automatically invoke the
-    // attributeChangedCallback above.
+  get placeholder() {
+    return this.getAttribute("placeholder");
+  }
+  get size() {
+    return this.getAttribute("size");
+  }
+  get value() {
+    return this.getAttribute("value");
+  }
+  get disabled() {
+    return this.hasAttribute("disabled");
+  }
+  get hidden() {
+    return this.hasAttribute("hidden");
+  }
 
-    get placeholder() { return this.getAttribute("placeholder"); }
-    get size() { return this.getAttribute("size"); }
-    get value() { return this.getAttribute("value"); }
-    get disabled() { return this.hasAttribute("disabled"); }
-    get hidden() { return this.hasAttribute("hidden"); }
-
-    set placeholder(value) { this.setAttribute("placeholder", value); }
-    set size(value) { this.setAttribute("size", value); }
-    set value(text) { this.setAttribute("value", text); }
-    set disabled(value) {
-        if (value) this.setAttribute("disabled", "");
-        else this.removeAttribute("disabled");
-    }
-    set hidden(value) {
-        if (value) this.setAttribute("hidden", "");
-        else this.removeAttribute("hidden");
-    }
+  set placeholder(value) {
+    this.setAttribute("placeholder", value);
+  }
+  set size(value) {
+    this.setAttribute("size", value);
+  }
+  set value(text) {
+    this.setAttribute("value", text);
+  }
+  set disabled(value) {
+    if (value) this.setAttribute("disabled", "");
+    else this.removeAttribute("disabled");
+  }
+  set hidden(value) {
+    if (value) this.setAttribute("hidden", "");
+    else this.removeAttribute("hidden");
+  }
 }
 
 // This static field is required for the attributeChangedCallback method.
