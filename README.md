@@ -1,2 +1,2 @@
-# js-training
+# js-exercises
 Javascript研修
