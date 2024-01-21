@@ -1,12 +1,8 @@
 module.exports = {
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-  ],
-  parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
-  root: true,
+  parserOptions: {
+    sourceType: "module",
+  },
+  extends: ["eslint:recommended", "prettier"],
   env: {
     es2020: true,
     node: true,
@@ -16,5 +12,6 @@ module.exports = {
     // 本のサンプルコードが基本的にconstを使っていないためerrorからwarnに緩和する。
     // 通常業務ではほぼ確実に採用されるルールのため、offにはしない。
     "prefer-const": "warn",
-  }
+  },
+  root: true,
 };

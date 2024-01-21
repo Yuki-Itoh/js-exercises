@@ -10,3 +10,6 @@
   ②の場合、ログがObject型になる。
 
 - 対策方法
+  stringにする
+  JSON.stringifyする
+  console.log({ ...life});でオブジェクトをコピーする
