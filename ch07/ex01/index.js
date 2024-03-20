@@ -10,11 +10,11 @@ export function addMatrix(matrix1, matrix2) {
   const colLength = matrix1[0].length;
 
   // 行の初期化
-  const table = new Array(rowLength);
+  const table = [];
 
   for (let row = 0; row < rowLength; row++) {
     // 列の初期化
-    table[row] = new Array(rowLength);
+    table[row] = [];
     for (let col = 0; col < colLength; col++) {
       table[row][col] = matrix1[row][col] + matrix2[row][col];
     }
@@ -29,5 +29,16 @@ export function addMatrix(matrix1, matrix2) {
  * @param {number[][]} matrix2
  */
 export function multiplyMatrix(matrix1, matrix2) {
-  //TODO
+  let table = [];
+  for (let i = 0; i < matrix1.length; i++) {
+    table[i] = [];
+    for (let j = 0; j < matrix2[0].length; j++) {
+      let sum = 0;
+      for (let k = 0; k < matrix2.length; k++) {
+        sum += matrix1[i][k] * matrix2[k][j];
+      }
+      table[i][j] = sum;
+    }
+  }
+  return table;
 }
