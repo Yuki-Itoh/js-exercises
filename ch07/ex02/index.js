@@ -4,17 +4,11 @@
 function fizzbuzz(n) {
   const array = [...Array(n)]
     .map((_, index) => index + 1) // 1からnの配列を作成する
-    .forEach((value) => {
-      //TODO if文を使わない
-      if (value % 15 === 0) {
-        console.log("FizzBuzz");
-      } else if (value % 3 === 0) {
-        console.log("Fizz");
-      } else if (value % 5 === 0) {
-        console.log("Buzz");
-      } else {
-        console.log(value);
-      }
+    .map((n, i) => ((i + 1) % 3 ? i + 1 : "Buzz"))
+    .map((n, i) => ((i + 1) % 5 ? n : "Fizz"))
+    .map((n, i) => ((i + 1) % 15 ? n : "FizzBuzz"))
+    .forEach((n) => {
+      console.log(n);
     });
 }
 
@@ -37,3 +31,5 @@ function sumOfEvensIsLargerThan42(array) {
       }) >= 42
   );
 }
+
+fizzbuzz(15);
