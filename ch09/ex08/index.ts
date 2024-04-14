@@ -1,22 +1,27 @@
 // 目覚まし時計の状態
-type State =
+export type State =
   | "normal" // 通常
   | "alarmSet" // アラームセット中
   | "alarmSounding" // アラーム鳴動中
   | "snoozing"; // スヌーズ中
 
 // イベント時に発生するアクション
-type Action =
+export type Action =
   | "none" // 何もしない
   | "soundAlarm" // アラームを鳴らす
   | "stopAlarm"; // アラームを止める
 
 // 目覚まし時計クラス
-class AlarmClock {
+export class AlarmClock {
   private state: State;
 
   constructor() {
     this.state = "normal";
+  }
+
+  // 新規追加
+  getState(): State {
+    return this.state;
   }
 
   // アラーム設定イベント

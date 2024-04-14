@@ -40,6 +40,7 @@
 
 # プログラムを実行 (TS)
 > npx ts-node ch01/ex09/index.ts
+> npx tsx ch09/ex08/index.ts # node v18ならこっち
 
 # プログラムを実行 (TS, Node.js >= 20)
 > npx node --loader ts-node/esm ch01/ex09/index.ts
