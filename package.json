@@ -1,9 +1,9 @@
 {
-  "name": "preset-ts",
+  "name": "preset-js",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest --runInBand",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write ."
   },
@@ -20,6 +20,8 @@
     "prettier": "^3.0.3",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   }
 }
