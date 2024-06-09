@@ -15,3 +15,8 @@ function convertEndian(uint32Array) {
 
   return converted;
 }
+
+/**
+ * 想定解：
+ * DataViewの第三引数を使ってビッグ/リトルエンディアンを作り分ける。
+ */

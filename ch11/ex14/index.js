@@ -5,7 +5,7 @@ export function sortJapanese(array) {
 export function toJapaneseDateString(date) {
   return Intl.DateTimeFormat("ja-JP-u-ca-japanese", {
     year: "2-digit",
-    month: "short",
+    month: "long",
     day: "2-digit",
   }).format(date);
 }
