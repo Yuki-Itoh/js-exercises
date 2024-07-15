@@ -5,6 +5,10 @@ export async function retryWithExponentialBackoff(func, maxRetry) {
   let retryCount = 0;
   let waitingTime = 10; // テスト時間が伸びないように10msとする
 
+  /**
+   * ※実装が間違っている※
+   * async関数の中ではnew Promiseは不要。そのままreturnしたりthrow Errorしたりすればよい。
+   */
   return new Promise(async (resolve, reject) => {
     while (isRetry) {
       console.log(
