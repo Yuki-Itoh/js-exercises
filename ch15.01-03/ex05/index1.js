@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
 
-document.addEventListener("domcontentloaded", () => {
+window.addEventListener("load", () => {
   $("div#1000").html(_.capitalize("hello"));
 });
