@@ -5,7 +5,7 @@ test("MyArray.map()", () => {
   const result = array.map((x) => x * x);
 
   expect(result instanceof MyArrayLike).toBe(true);
-  // expect(result.length).toBe(5);
+  expect(result.length).toBe(5);
   expect(Array.from(result)).toStrictEqual([1, 4, 9, 16, 25]);
 });
 
