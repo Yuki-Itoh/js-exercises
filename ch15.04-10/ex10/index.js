@@ -16,7 +16,7 @@ canvas.height = COLS * RESOLUTION;
 let animationId = null;
 
 // NOTE: download from https://soundeffect-lab.info/sound/button/mp3/decision1.mp3
-const sound = new Audio("/ch15.04-10/ex10/decision1.mp3");
+const sound = new Audio("decision1.mp3");
 
 // ライフゲームのセル (true or false) をランダムに初期化する
 let grid = new Array(ROWS)
@@ -47,6 +47,33 @@ function updateGrid(grid) {
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
       // 周囲のセルの生存数を数えて nextGrid[row][col] に true or false を設定する (実装してね)
+      let alives = 0;
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          if (i === 0 && j === 0) continue;
+          if (grid[row + i][col + i]) {
+            alives++;
+          }
+          const r = row + i;
+          const c = col + j;
+
+          if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+            alives += grid[r][c] ? 1 : 0;
+          }
+        }
+      }
+
+      if (grid[row][col]) {
+        // 現在生きている場合
+        if (alives < 2 || alives > 3) {
+          nextGrid[row][col] = false;
+        }
+      } else {
+        // 現在死んでいる場合
+        if (alives === 3) {
+          nextGrid[row][col] = true;
+        }
+      }
     }
   }
   return nextGrid;

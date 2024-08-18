@@ -1,3 +1,64 @@
 .completed {
   text-decoration: line-through;
 }
+
+/* 全体のレイアウトとフォント設定 */
+body {
+  font-family: Arial, sans-serif; /* ページのフォント指定 */
+  background-color: #ffffff; /* 背景色:白; */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center; /* 子要素を水平方向の中央に配置 */
+  align-items: flex-start;
+  height: 100vh;
+  color: #333;
+}
+
+/* フォームのスタイル */
+form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  margin: 20px 0;
+}
+
+/* フォームのテキストボックス */
+#new-todo {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #c71d1d; /* 枠の色：赤 */
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+/* 背景青、テキスト白のaddボタンを配置 */
+button {
+  padding: 10px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+/* addボタン上にマウスをホバーした時、背景を緑色にする */
+button:hover {
+  background-color: #29db29;
+}
+
+/* ToDoリストのスタイル */
+li {
+  background-color: #e7e424; /* リストアイテムの背景を黄色に */
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+/* リストアイテム上にマウスをホバーした時、背景を白に */
+li:hover {
+  background-color: #f0f0f0;
+}
