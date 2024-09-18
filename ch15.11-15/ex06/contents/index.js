@@ -5,26 +5,14 @@ const input = document.querySelector("#new-todo");
 document.addEventListener("DOMContentLoaded", async () => {
   // TODO: ここで API を呼び出してタスク一覧を取得し、
   // 成功したら取得したタスクを appendToDoItem で ToDo リストの要素として追加しなさい
-  fetch("http://localhost:3001/api/tasks", {
-    mode: "cors",
-  })
-    .then((response) => {
-      if (
-        response.ok &&
-        response.headers.get("Content-Type") ===
-          "application/json; charset=UTF-8"
-      ) {
-        return response.json();
-      } else {
-        alert(`Server Error: ${response.status} ${response.statusText}`);
-      }
-    })
-    .then((jsonObj) => {
-      const tasks = jsonObj.items;
-      tasks.forEach((task) => {
-        appendToDoItem(task);
-      });
-    });
+  const tasks = getTasksFromStorage();
+  tasks.forEach((task) => {
+    appendToDoItem(task);
+  });
+});
+
+window.addEventListener("storage", () => {
+  location.reload();
 });
 
 form.addEventListener("submit", (e) => {
@@ -41,27 +29,17 @@ form.addEventListener("submit", (e) => {
   // new-todo の中身は空にする
   input.value = "";
 
-  // TODO: ここで API を呼び出して新しいタスクを作成し
-  // 成功したら作成したタスクを appendToDoElement で ToDo リストの要素として追加しなさい
-  fetch("http://localhost:3001/api/tasks", {
-    method: "POST",
-    mode: "cors",
-    body: JSON.stringify({ name: todo }),
-  })
-    .then((response) => {
-      if (
-        response.ok &&
-        response.headers.get("Content-Type") ===
-          "application/json; charset=UTF-8"
-      ) {
-        return response.json();
-      } else {
-        alert(`Server Error: ${response.status} ${response.statusText}`);
-      }
-    })
-    .then((jsonObj) => {
-      appendToDoItem(jsonObj);
-    });
+  // 新規タスク作成
+  const lastId = sessionStorage.getItem("taskId") ?? "0";
+  const id = parseInt(lastId) + 1;
+  const task = {
+    id: id,
+    name: todo,
+    status: "active",
+  };
+  appendToDoItem(task);
+  addTaskToStorage(task);
+  sessionStorage.setItem("taskId", id);
 });
 
 // API から取得したタスクオブジェクトを受け取って、ToDo リストの要素を追加する
@@ -77,8 +55,13 @@ function appendToDoItem(task) {
   // TODO: toggle が変化 (change) した際に API を呼び出してタスクの状態を更新し
   // 成功したら label.style.textDecorationLine を変更しなさい
   toggle.setAttribute("type", "checkbox");
+  const isActive = task.status === "active";
+  toggle.checked = !isActive;
+  label.style.textDecorationLine = isActive ? "none" : "line-through";
   toggle.addEventListener("change", () => {
     label.style.textDecorationLine = toggle.checked ? "line-through" : "none";
+    task.status = toggle.checked ? "completed" : "active";
+    patchTaskToStorage(task);
   });
 
   const destroy = document.createElement("button");
@@ -86,16 +69,8 @@ function appendToDoItem(task) {
   // 成功したら elem を削除しなさい
   destroy.textContent = "❌";
   destroy.addEventListener("click", () => {
-    fetch(`http://localhost:3001/api/tasks/${task.id}`, {
-      method: "DELETE",
-      mode: "cors",
-    }).then((response) => {
-      if (response.ok) {
-        elem.remove();
-      } else {
-        alert(`Server Error: ${response.status} ${response.statusText}`);
-      }
-    });
+    removeTaskFromStorage(task);
+    elem.remove();
   });
 
   // TODO: elem 内に toggle, label, destroy を追加しなさい
@@ -103,4 +78,42 @@ function appendToDoItem(task) {
   elem.appendChild(label);
   elem.appendChild(destroy);
   list.prepend(elem);
+}
+
+function addTaskToStorage(task) {
+  const tasks = getTasksFromStorage();
+  tasks.push(task);
+  setTasksToStorage(tasks);
+}
+
+function removeTaskFromStorage(task) {
+  const tasks = getTasksFromStorage();
+  const removed = tasks.filter((t) => {
+    return t.id !== task.id;
+  });
+
+  setTasksToStorage(removed);
+}
+
+function patchTaskToStorage(task) {
+  const tasks = getTasksFromStorage();
+  const removed = tasks.filter((t) => {
+    return t.id !== task.id;
+  });
+  removed.push(task);
+
+  setTasksToStorage(removed);
+}
+
+function getTasksFromStorage() {
+  const items = sessionStorage.getItem("items");
+  if (items === null) {
+    return [];
+  } else {
+    return JSON.parse(items).tasks;
+  }
+}
+
+function setTasksToStorage(tasks) {
+  sessionStorage.setItem("items", JSON.stringify({ tasks: tasks }));
 }

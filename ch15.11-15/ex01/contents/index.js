@@ -5,10 +5,30 @@ const input = document.querySelector("#new-todo");
 document.addEventListener("DOMContentLoaded", async () => {
   // TODO: ここで API を呼び出してタスク一覧を取得し、
   // 成功したら取得したタスクを appendToDoItem で ToDo リストの要素として追加しなさい
+  fetch("http://localhost:3000/api/tasks")
+    .then((response) => {
+      if (
+        response.ok &&
+        response.headers.get("Content-Type") ===
+          "application/json; charset=UTF-8"
+      ) {
+        return response.json();
+      } else {
+        alert(`Server Error: ${response.status} ${response.statusText}`);
+      }
+    })
+    .then((jsonObj) => {
+      const tasks = jsonObj.items;
+      tasks.forEach((task) => {
+        appendToDoItem(task);
+      });
+    });
 });
 
 form.addEventListener("submit", (e) => {
   // TODO: ここで form のイベントのキャンセルを実施しなさい (なぜでしょう？)
+  // ブラウザの更新によるリセットを防ぐため
+  e.preventDefault();
 
   // 両端からホワイトスペースを取り除いた文字列を取得する
   const todo = input.value.trim();
@@ -21,6 +41,24 @@ form.addEventListener("submit", (e) => {
 
   // TODO: ここで API を呼び出して新しいタスクを作成し
   // 成功したら作成したタスクを appendToDoElement で ToDo リストの要素として追加しなさい
+  fetch("http://localhost:3000/api/tasks", {
+    method: "POST",
+    body: JSON.stringify({ name: todo }),
+  })
+    .then((response) => {
+      if (
+        response.ok &&
+        response.headers.get("Content-Type") ===
+          "application/json; charset=UTF-8"
+      ) {
+        return response.json();
+      } else {
+        alert(`Server Error: ${response.status} ${response.statusText}`);
+      }
+    })
+    .then((jsonObj) => {
+      appendToDoItem(jsonObj);
+    });
 });
 
 // API から取得したタスクオブジェクトを受け取って、ToDo リストの要素を追加する
@@ -35,11 +73,30 @@ function appendToDoItem(task) {
   const toggle = document.createElement("input");
   // TODO: toggle が変化 (change) した際に API を呼び出してタスクの状態を更新し
   // 成功したら label.style.textDecorationLine を変更しなさい
+  toggle.setAttribute("type", "checkbox");
+  toggle.addEventListener("change", () => {
+    label.style.textDecorationLine = toggle.checked ? "line-through" : "none";
+  });
 
   const destroy = document.createElement("button");
   // TODO: destroy がクリック (click) された場合に API を呼び出してタスク を削除し
   // 成功したら elem を削除しなさい
+  destroy.textContent = "❌";
+  destroy.addEventListener("click", () => {
+    fetch(`http://localhost:3000/api/tasks/${task.id}`, {
+      method: "DELETE",
+    }).then((response) => {
+      if (response.ok) {
+        elem.remove();
+      } else {
+        alert(`Server Error: ${response.status} ${response.statusText}`);
+      }
+    });
+  });
 
   // TODO: elem 内に toggle, label, destroy を追加しなさい
+  elem.appendChild(toggle);
+  elem.appendChild(label);
+  elem.appendChild(destroy);
   list.prepend(elem);
 }
