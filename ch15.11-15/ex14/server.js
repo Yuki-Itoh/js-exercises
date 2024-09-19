@@ -40,7 +40,7 @@ async function serveContentsHandler(url, _req, res) {
     const filePath = path.join(
       __dirname,
       "contents",
-      reqPath === "/" ? "index.html" : path.join(...reqPath.split("/")),
+      reqPath === "/" ? "index.html" : path.join(...reqPath.split("/"))
     );
 
     const content = await fs.readFile(filePath);
@@ -76,7 +76,7 @@ function cookieAuthzMiddleware(_url, req, res, params) {
   // HttpOnly を有効にしてクライアントの JavaScript から Cookie を参照できないようにする
   res.setHeader(
     "Set-Cookie",
-    `sid=${encodeURIComponent(sid)}; Domain=localhost; Path=/; HttpOnly;`,
+    `sid=${encodeURIComponent(sid)}; Domain=localhost; Path=/; HttpOnly;`
   );
   return true;
 }
@@ -143,18 +143,33 @@ function routes(...routeHandlers) {
   };
 }
 
+async function nopHandler(_url, _req, res) {
+  res.writeHead(200);
+  res.end();
+}
+
+// CORS のヘッダを返すミドルウェア
+function corsMiddleware(_url, _req, res) {
+  // TODO: CORS に必要なヘッダを複数設定する
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Methods", "*");
+  return true;
+}
+
 async function main() {
   const authz = cookieAuthzMiddleware;
-
+  const cors = corsMiddleware;
   http
     .createServer(async function (req, res) {
       await routes(
+        ["OPTIONS", "/api/*", nopHandler, cors],
         ["GET", "/message", listTasksHandler, authz],
-        ["GET", "/*", serveContentsHandler, authz],
+        ["GET", "/*", serveContentsHandler, authz]
       )(req, res);
     })
-    .listen(3000);
-  console.log("Server running at http://localhost:3000/");
+    .listen(3001);
+  console.log("Server running at http://localhost:3001/");
 }
 
 await main();

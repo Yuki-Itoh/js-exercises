@@ -5,6 +5,7 @@ const messageContainer = document.getElementById("message-container");
 button.addEventListener("click", (e) => {
   e.preventDefault();
   getMessageFromServer();
+  button.disabled = true;
 });
 async function getMessageFromServer() {
   const messageElement = document.createElement("div");
@@ -12,5 +13,12 @@ async function getMessageFromServer() {
   messageElement.textContent = "";
   messageContainer.appendChild(messageElement);
 
-  // TODO: ここにサーバーとのやり取り等を実装しなさい
+  const evtSource = new EventSource("http://localhost:3001/message");
+  evtSource.onmessage = function (event) {
+    messageElement.textContent = event.data;
+  };
+
+  evtSource.onerror = () => {
+    button.disabled = false;
+  };
 }
