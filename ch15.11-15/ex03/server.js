@@ -245,7 +245,7 @@ function corsMiddleware(_url, _req, res) {
   // TODO: CORS に必要なヘッダを複数設定する
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
   res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader("Access-Control-Allow-Methods", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
   return true;
 }
 

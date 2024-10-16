@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 成功したら取得したタスクを appendToDoItem で ToDo リストの要素として追加しなさい
   fetch("http://localhost:3001/api/tasks", {
     mode: "cors",
+    credentials: "include",
   })
     .then((response) => {
       if (
@@ -46,6 +47,7 @@ form.addEventListener("submit", (e) => {
   fetch("http://localhost:3001/api/tasks", {
     method: "POST",
     mode: "cors",
+    credentials: "include",
     body: JSON.stringify({ name: todo }),
   })
     .then((response) => {
@@ -89,6 +91,7 @@ function appendToDoItem(task) {
     fetch(`http://localhost:3001/api/tasks/${task.id}`, {
       method: "DELETE",
       mode: "cors",
+      credentials: "include",
     }).then((response) => {
       if (response.ok) {
         elem.remove();
