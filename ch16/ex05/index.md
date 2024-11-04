@@ -42,4 +42,5 @@
   結果：Error: ENOENT: no such file or directoryが標準出力された。
 - `node cat.mjs invalid-file 2> error.txt`  
   予想：エラーをerror.txtに出力する  
-  結果：Error: ENOENT: no such file or directoryが標準出力された。
+  結果：同上  
+  ファイルディスクリプタ`2`(=標準エラー出力)を指定して、error.txtにリダイレクトしている

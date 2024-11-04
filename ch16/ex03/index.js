@@ -14,8 +14,8 @@ function encrypt64(text, key) {
 
   // 暗号化とBase64エンコード
   const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
-  let encryptedBase64 = cipher.update(text);
-  encryptedBase64 = Buffer.concat([encryptedBase64, cipher.final()]);
+  let encryptedBase64 = cipher.update(text, "utf-8", "base64");
+  encryptedBase64 += cipher.final("base64");
 
   // 暗号文とIVをbase64で返す
   return {
