@@ -1,19 +1,9 @@
 {
-    "arrowParens": "always", // アロー関数の()を書く
-    "bracketSpacing": true, // オブジェクトの{}の内側にスペースを入れる
-    "endOfLine": "lf",
-    "htmlWhitespaceSensitivity": "css",
-    "insertPragma": false,
-    "jsxBracketSameLine": false,
-    "jsxSingleQuote": true,
-    "printWidth": 80,
-    "proseWrap": "preserve",
-    "quoteProps": "as-needed",
-    "requirePragma": false,
-    "semi": true,
+    "arrowParens": "always",
+    "bracketSpacing": true, 
+    "semi": true, 
     "singleQuote": true,
-    "tabWidth": 2, // インデントのスペースは2
-    "trailingComma": "es5",
-    "useTabs": false, // インデントにタブ文字を使用しない
-    "vueIndentScriptAndStyle": false
+    "tabWidth": 2, 
+    "trailingComma": "es5", 
+    "useTabs": false
 }
