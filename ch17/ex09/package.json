@@ -1,0 +1,17 @@
+{
+  "name": "ex09",
+  "version": "1.0.0",
+  "description": "",
+  "main": "caller.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "flow": "flow"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "flow-bin": "^0.253.0",
+    "flowtype": "^2.0.0"
+  }
+}

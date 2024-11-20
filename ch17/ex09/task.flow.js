@@ -4,6 +4,11 @@
 //  - Priority: "low"|"middle"|"high"のいずれかの値をとる
 //  - PriorityTask: Taskかつ{ priority: Priority }を持つ型
 
+type User {}
+type Task {}
+type Priority {}
+type PriorityTask {}
+
 // Userオブジェクトであることを判定する
 function isUserObject(obj: any) {
   return (
