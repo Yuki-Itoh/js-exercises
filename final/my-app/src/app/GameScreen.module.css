@@ -1,0 +1,11 @@
+.gameScreen {
+  position: relative;
+  background-size: cover; /* 画像をコンテナに合わせて拡大/縮小 */
+  background-repeat: no-repeat;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}

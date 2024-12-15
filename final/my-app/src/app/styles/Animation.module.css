@@ -1,0 +1,25 @@
+.character {
+  width: 100px; /* 1フレームの幅 */
+  height: 100px; /* フレームの高さ */
+  position: absolute; /* 動きを制御するための設定 */
+  top: auto; /* 縦位置の調整 */
+  background: url("/くちぱっち-removebg.png") no-repeat;
+  background-size: 100px auto; /* スプライト全体のサイズ */
+  animation: walk 30s steps(20) infinite;
+  margin-top: 80px;
+}
+
+@keyframes walk {
+  0% {
+    transform: translateX(0) scaleX(-1);
+  }
+  50% {
+    transform: translateX(150px) scaleX(-1);
+  }
+  50.01% {
+    transform: translateX(150px) scaleX(1);
+  }
+  100% {
+    transform: translateX(0) scaleX(1);
+  }
+}

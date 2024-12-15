@@ -1,8 +1,11 @@
-// import { jest } from '@jest/globals';
+import { jest } from '@jest/globals';
 import { createIssue } from '.';
 
-test('github api', () => {
-  jest.mock('node-fetch');
+global.fetch = jest.fn().mockImplementation(() => {
+  console.log('mock fetch');
+  return new Promise('');
+});
 
+test('github api', () => {
   createIssue('jest');
 });
